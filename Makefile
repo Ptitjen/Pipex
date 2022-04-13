@@ -6,7 +6,7 @@
 #    By: jeulliot <jeulliot@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/04/05 11:45:51 by jeulliot          #+#    #+#              #
-#    Updated: 2022/04/12 16:47:50 by jeulliot         ###   ########.fr        #
+#    Updated: 2022/04/13 15:51:37 by jeulliot         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,7 +14,7 @@ SRCS	= srcs/pipex.c \
 			srcs/main.c \
 			srcs/errors.c \
 			srcs/ft_putstr_fd.c \
-			srcs/ft_strjoin.c
+			srcs/ft_strjoin.c srcs/ft_strcpy.c srcs/ft_split.c
 
 NAME	= pipex
 

@@ -1,29 +1,40 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pipex.h                                            :+:      :+:    :+:   */
+/*   ft_strcpy.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jeulliot <jeulliot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/04/05 11:46:37 by jeulliot          #+#    #+#             */
-/*   Updated: 2022/04/13 15:51:09 by jeulliot         ###   ########.fr       */
+/*   Created: 2022/02/21 16:38:37 by jeulliot          #+#    #+#             */
+/*   Updated: 2022/04/13 15:50:47 by jeulliot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef PIPEX_H
-# define PIPEX_H
-# include <stdlib.h>
-# include <unistd.h>
-# include <errno.h>
-# include <string.h>
-# include <sys/types.h>
-# include <sys/stat.h>
-# include <fcntl.h>
+#include<stdlib.h>
 
-# include <stdio.h>
+static size_t	ft_strlen(const char *str)
+{
+	size_t	i;
 
-void	ft_putstr_fd(char *s, int fd);
-char	*ft_strjoin(char const *s1, char const *s2);
-char	*ft_strcpy(char *dst, const char *src);
-char	**ft_split(char const *s, char c);
-#endif
+	i = 0;
+	while (str[i] != '\0')
+		i ++;
+	return (i);
+}
+
+char	*ft_strcpy(char *dst, const char *src)
+{
+	size_t	i;
+	size_t	n;
+
+	i = 0;
+	n = ft_strlen(src);
+	dst = malloc(sizeof(char) * (n + 1));
+	while (i < n)
+	{
+		dst[i] = src[i];
+		i ++;
+	}			
+	dst[i] = '\0';
+	return (dst);
+}
