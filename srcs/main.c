@@ -6,129 +6,100 @@
 /*   By: jeulliot <jeulliot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/05 11:46:17 by jeulliot          #+#    #+#             */
-/*   Updated: 2022/04/13 17:15:31 by jeulliot         ###   ########.fr       */
+/*   Updated: 2022/04/14 16:12:47 by jeulliot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
-
-int	main(int argc, char **argv)
+void	ft_nb_arg_error (int argc)
 {
-	pid_t	father;
-	int	p;
-	int fd1;
-	int fd2;
-	int	tab[2];
-	char *buffer;
-
-	buffer = malloc(sizeof(char) * 1000);
-	fd1 = open(argv[1], O_RDONLY);
-	if (fd1 == -1)
+	if (argc != 5)
 	{
-		ft_putstr_fd("Erreur fichier 1", 2);
+		write(2, "\n### Error ###\n\nPlease use format : ./pipex inputfile cmd1 cmd2 outputfile\n\n", 76);
 		exit (-1);
 	}
-	fd2 = open(argv[argc - 1], O_RDWR);
-	if (fd2 == -1)
-	{
-		ft_putstr_fd("Erreur fichier 2", 2);
-		exit (-1);
-	}
-	tab[0] = fd2;
-	tab[1] = fd1;
-
-	p = pipe(tab);
-	if (p == -1) //echec creation pipe
-		ft_putstr_fd(strerror(errno), 2); // ecrit directement dans sortie erreur
-
-	father = fork();
-
-
-		
-	if (father == 0)
-	{
-		close (tab[1]);
-		char **tabc1;
-		char **commande2;
-		char **argcom2;
-//	wait (NULL);
-		tabc1 = malloc(sizeof(char*) * 2);		
-		read (tab[0], buffer, 1000);
-		tabc1[0] = ft_strcpy(tabc1[0], buffer);
-		tabc1[1] = "\n";
-		printf("apres pipe : %s", tabc1[0]);
-		printf("\n");
-		printf("commande 2 full : %s\n", argv[3]);
-		commande2 = ft_split(argv[3], ' ');
-		argcom2 = ft_split(argv[1], ' ');
-		printf("commande 2 : %s\n", commande2[0]);		
-		
-		execve(ft_strjoin("/bin/", commande2[0]), argcom2, NULL); 
-		close (tab[0]);
-	}	
-	if (father > 0)
-	{
-		close (tab[0]);
-		char **tabc;
-		char **commande;
-		char **bli;
-		bli = malloc(sizeof(char*) * 2);
-		bli[0] = "";
-		bli[1] = 0;
-		tabc = malloc(sizeof(char*) * 2);
-		
-		buffer = ft_strcpy(buffer, "file1");		
-		printf("commande 1 full : %s\n", argv[2]);
-		commande = ft_split(argv[2], ' ');
-		printf("commande 1 : %s\n", commande[0]);
-		//printf("buffer : %s\n", buffer);
-		write (tab[1], buffer, 1000);
-		execve(ft_strjoin("/bin/", commande[0]), bli, NULL); // voir comment recup le resultat pour pouvoir le mettre dans buffer
-		close(tab[1]);
-	}
-
-
-	close (fd1);
-	close (fd2);
-	return (0);
 }
 
-
-/*
-int	main(int argc, char **argv)
+void	ft_process_1 (char **argv, char **env, int fd_tab[2]) //fils : avec argv[2]
 {
-	//pid_t	father;
-	int	p;
-	int fd1;
-	int fd2;
-	int	tab[2];
-	char buffer[1000];
+	(void) env;
+	int	input_file;
+	input_file = open(argv[1], O_RDONLY, 0777);
 
-	fd1 = open(argv[1], O_RDONLY);
-	if (fd1 == -1)
+	if (input_file == -1)
 	{
-		ft_putstr_fd("Erreur fichier 1", 2);
+		ft_putstr_fd("### Input file error ###", 2);
+		exit (-1);
+	}			
+	
+	char **commande;
+	commande = ft_split(argv[2], ' ');
+
+	//write(fd_tab[1], "zombicorn", 9); test pipe : marche
+
+	dup2(input_file, STDIN_FILENO); //entree standard = 0 => le input file devient entree	
+	dup2(fd_tab[1], STDOUT_FILENO); // sortie standard = 1 => la case 1 de la pipe devient sortie
+	execve(ft_strjoin("/bin/", commande[0]), commande, env);
+	close(fd_tab[0]);
+	close(input_file);	
+}
+
+void	ft_process_2 (char **argv, char **env, int fd_tab[2])//parent : avec argv[3]
+{
+	int		output_file;
+	char	**commande;	
+	
+	output_file = open(argv[4], O_WRONLY | O_CREAT | O_TRUNC, 0777);
+	if (output_file == -1)
+	{
+		ft_putstr_fd("### Output file error ###", 2);
+		exit (-1);
+	}	
+	commande = ft_split(argv[3], ' ');	
+	
+	/* test pipe : marche */
+	/*char *buffer = malloc(sizeof(char)*1000);
+	read(fd_tab[0], buffer, 1000 );
+	write(output_file, buffer, 1000); */
+	
+	dup2(fd_tab[0], STDIN_FILENO); 
+	dup2(output_file, STDOUT_FILENO); 	
+	execve(ft_strjoin("/bin/", commande[0]), commande, env); //options - ok
+	close(fd_tab[1]);
+	close(output_file);
+}
+
+//pipe marche
+//commands marchent avec options
+//arrive pas a executer sur le contenu de file1?
+int	main(int argc, char **argv, char **env)
+{
+	pid_t	process;
+	int		p;
+	int		fd_tab[2];
+
+	ft_nb_arg_error (argc);
+	p = pipe(fd_tab);
+	if (p == -1)
+	{
+		write(2, "\n### Error while creating pipe ###\n\n", 36);
 		exit (-1);
 	}
-	fd2 = open(argv[argc - 1], O_RDWR);
-	if (fd2 == -1)
+	process = fork();
+	if (process == -1)
 	{
-		ft_putstr_fd("Erreur fichier 2", 2);
+		write(2, "\n### Error while executing fork ###\n\n", 37);
 		exit (-1);
-	}
-	tab[0] = fd2;
-	tab[1] = fd1;
-	p = pipe(tab);
-	if (p == -1) //echec creation pipe
-		ft_putstr_fd(strerror(errno), 2); // ecrit directement dans sortie erreur
-	write (tab[1], "Zombicorns", 10);
-	read (tab[0], buffer, 1000);
-	printf("%s", buffer);
-	close (fd1);
-	close (fd2);
+	}	
+	if (process == 0)
+		ft_process_1(argv, env, fd_tab);	
+	waitpid(process, NULL, 0);
+	ft_process_2(argv, env, fd_tab);
+	close(fd_tab[0]);
+	close(fd_tab[1]);
 	return (0);
-}*/
+}
 
 //executer commandes du shell : /bin/commande  ex /bin/ls
 /*
