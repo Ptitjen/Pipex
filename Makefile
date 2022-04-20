@@ -14,7 +14,8 @@ SRCS	= srcs/pipex.c \
 			srcs/main.c \
 			srcs/errors.c \
 			srcs/ft_putstr_fd.c \
-			srcs/ft_strjoin.c srcs/ft_strcpy.c srcs/ft_split.c
+			srcs/ft_strjoin.c srcs/ft_strcpy.c srcs/ft_split.c \
+			srcs/ft_strncmp.c
 
 NAME	= pipex
 

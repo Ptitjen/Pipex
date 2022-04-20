@@ -1,7 +1,1 @@
-total 128
--rw-r--r--   1 jeulliot  2022_mulhouse   1196 Apr 13 15:51 Makefile
--rw-r--r--@  1 jeulliot  2022_mulhouse     10 Apr 14 14:44 Zombicorn
--rw-rw-rw-@  1 jeulliot  2022_mulhouse    395 Apr 14 14:46 file1
--rw-rw-rw-@  1 jeulliot  2022_mulhouse      0 Apr 14 16:12 file2
--rwxr-xr-x   1 jeulliot  2022_mulhouse  50416 Apr 14 16:12 pipex
-drwxr-xr-x  10 jeulliot  2022_mulhouse    340 Apr 13 15:50 srcs
+       3

@@ -22,8 +22,17 @@
 
 # include <stdio.h>
 
+typedef struct s_cmd{
+    char **path;
+    char *main1;
+    char *main2;
+    char **arg1;
+    char **arg2;
+} t_cmd;
+
 void	ft_putstr_fd(char *s, int fd);
 char	*ft_strjoin(char const *s1, char const *s2);
 char	*ft_strcpy(char *dst, const char *src);
 char	**ft_split(char const *s, char c);
+int	    ft_strncmp(const char *s1, const char *s2, size_t n);
 #endif
