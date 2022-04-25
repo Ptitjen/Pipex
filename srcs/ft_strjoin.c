@@ -12,7 +12,7 @@
 
 #include<stdlib.h>
 
-static size_t	ft_strlen1(const char *str)
+static size_t	ft_strlen1(char *str)
 {
 	size_t	i;
 
@@ -24,7 +24,7 @@ static size_t	ft_strlen1(const char *str)
 	return (i);
 }
 
-char	*ft_strjoin(char const *s1, char const *s2)
+char	*ft_strjoin(char *s1, char *s2)
 {
 	size_t	i;
 	size_t	lens1;

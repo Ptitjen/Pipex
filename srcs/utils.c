@@ -12,18 +12,17 @@
 
 #include "pipex.h"
 
-void	ft_error_exit(int choice)
+void	ft_error_exit(t_cmd cmd)
 {
-	if (choice == 1)
-	{
-		ft_putstr_fd(strerror(errno), 2);
-		exit (EXIT_FAILURE);
-	}
-	if (choice == 2)
-	{
-		ft_putstr_fd(strerror(errno), 2);
-		exit (EXIT_FAILURE);
-	}
+	ft_putstr_fd(strerror(errno), 2);
+	free(cmd.path);
+	exit (1);
+}
+
+void	ft_error_exit_arg(void)
+{
+	ft_putstr_fd(strerror(errno), 2);
+	exit (1);
 }
 
 void	ft_nb_arg_error(int argc)
@@ -32,6 +31,31 @@ void	ft_nb_arg_error(int argc)
 	{
 		write(2, "\n### Error ###\n\nPlease use format : \
 		./pipex inputfile cmd1 cmd2 outputfile\n\n", 76);
-		exit (EXIT_FAILURE);
+		exit (1);
 	}
+}
+
+void ft_free_char_tab(char **tab)
+{
+	int	i;
+
+	i = 0;
+	while (tab && tab[i])
+	{
+		free(tab[i]);
+		i ++;
+	}
+	free(tab);
+}
+
+void	ft_free_all(t_cmd cmd)
+{
+	if (cmd.input_file != -1)
+	{
+		free(cmd.main1);
+		free(cmd.main2);
+		ft_free_char_tab(cmd.arg2);
+		ft_free_char_tab(cmd.arg1);
+	}		
+	ft_free_char_tab(cmd.path);
 }

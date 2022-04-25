@@ -10,9 +10,9 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include<stdlib.h>
+#include"pipex.h"
 
-static size_t	ft_strlen(const char *str)
+static size_t	ft_strlen(char *str)
 {
 	size_t	i;
 
@@ -23,28 +23,32 @@ static size_t	ft_strlen(const char *str)
 	return (i);
 }
 
-static size_t	ft_nb_slot(const char *str, char c)
+static size_t	ft_nb_slot(char *str, char c)
 {
 	size_t	nb_str;
 	size_t	k;
+	int		inside_quote;
 
+	inside_quote = -1;
 	k = 0;
 	nb_str = 0;
 	while (*str)
 	{
+		if (*str == 39)
+			inside_quote *= -1;
 		if (*str != c && k == 0)
 		{
 			k = 1;
 			nb_str ++;
 		}
-		else if (*str == c)
+		else if (*str == c && inside_quote == -1)
 			k = 0;
 		str ++;
 	}
 	return (nb_str);
 }
 
-static char	*ft_strncpy(const char *src, size_t index, size_t end)
+static char	*ft_strncpy(char *src, size_t index, size_t end)
 {
 	size_t	i;
 	char	*dest;
@@ -63,13 +67,15 @@ static char	*ft_strncpy(const char *src, size_t index, size_t end)
 	return (dest);
 }
 
-char	**ft_split(char const *s, char c)
+char	**ft_split(char *s, char c)
 {
 	char	**tab;
 	size_t	nb_str;
 	size_t	i;
 	int		k;
+	int		inside_quote;
 
+	inside_quote = -1;
 	i = -1;
 	nb_str = 0;
 	k = -1;
@@ -80,11 +86,13 @@ char	**ft_split(char const *s, char c)
 		return (NULL);
 	while (++i <= ft_strlen(s))
 	{
+		if (s[i] == 39)
+			inside_quote *= -1;
 		if (s[i] != c && k == -1)
 			k = i;
-		else if ((s[i] == c || i == ft_strlen(s)) && k != -1)
+		else if (((s[i] == c && inside_quote == -1)|| i == ft_strlen(s)) && k != -1)
 		{
-			tab[nb_str++] = ft_strncpy(s, k, i);
+			tab[nb_str++] = ft_strtrim(ft_strncpy(s, k, i), "'");
 			k = -1;
 		}
 	}
