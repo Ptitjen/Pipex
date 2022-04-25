@@ -11,10 +11,27 @@
 /* ************************************************************************** */
 
 #include "pipex.h"
-/*
-void	ft_arg_error(int argc, char **argv)
+
+void	ft_error_exit(int choice)
+{
+	if (choice == 1)
+	{
+		ft_putstr_fd(strerror(errno), 2);
+		exit (EXIT_FAILURE);
+	}
+	if (choice == 2)
+	{
+		ft_putstr_fd(strerror(errno), 2);
+		exit (EXIT_FAILURE);
+	}
+}
+
+void	ft_nb_arg_error(int argc)
 {
 	if (argc != 5)
-		exit(-1);
-	
-}*/
+	{
+		write(2, "\n### Error ###\n\nPlease use format : \
+		./pipex inputfile cmd1 cmd2 outputfile\n\n", 76);
+		exit (EXIT_FAILURE);
+	}
+}
