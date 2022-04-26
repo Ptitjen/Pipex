@@ -12,7 +12,7 @@
 
 #include"pipex.h"
 
-static size_t	ft_strlen(char *str)
+size_t	ft_strlen(char *str)
 {
 	size_t	i;
 
@@ -67,35 +67,40 @@ static char	*ft_strncpy(char *src, size_t index, size_t end)
 	return (dest);
 }
 
+t_split_params	ft_init_params(void)
+{
+	t_split_params	sp;
+
+	sp.iq = -1;
+	sp.i = -1;
+	sp.nb_str = 0;
+	sp.k = -1;
+	return (sp);
+}
+
 char	**ft_split(char *s, char c)
 {
-	char	**tab;
-	size_t	nb_str;
-	size_t	i;
-	int		k;
-	int		inside_quote;
+	t_split_params	sp;
 
-	inside_quote = -1;
-	i = -1;
-	nb_str = 0;
-	k = -1;
+	sp = ft_init_params();
 	if (s == NULL)
 		return (NULL);
-	tab = malloc(sizeof(char *) * (ft_nb_slot(s, c) + 1));
-	if (tab == NULL)
+	sp.tab = malloc(sizeof(char *) * (ft_nb_slot(s, c) + 1));
+	if (sp.tab == NULL)
 		return (NULL);
-	while (++i <= ft_strlen(s))
+	while (++sp.i <= ft_strlen(s))
 	{
-		if (s[i] == 39)
-			inside_quote *= -1;
-		if (s[i] != c && k == -1)
-			k = i;
-		else if (((s[i] == c && inside_quote == -1)|| i == ft_strlen(s)) && k != -1)
+		if (s[sp.i] == 39)
+			sp.iq *= -1;
+		if (s[sp.i] != c && sp.k == -1)
+			sp.k = sp.i;
+		else if (((s[sp.i] == c && sp.iq == -1)
+				|| sp.i == ft_strlen(s)) && sp.k != -1)
 		{
-			tab[nb_str++] = ft_strtrim(ft_strncpy(s, k, i), "'");
-			k = -1;
+			sp.tab[sp.nb_str++] = ft_strtrim(ft_strncpy(s, sp.k, sp.i), "'");
+			sp.k = -1;
 		}
 	}
-	tab[nb_str] = 0;
-	return (tab);
+	sp.tab[sp.nb_str] = 0;
+	return (sp.tab);
 }

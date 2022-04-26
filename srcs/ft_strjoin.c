@@ -10,19 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include<stdlib.h>
-
-static size_t	ft_strlen1(char *str)
-{
-	size_t	i;
-
-	i = 0;
-	if (str == NULL)
-		return (0);
-	while (str[i] != '\0')
-		i ++;
-	return (i);
-}
+#include"pipex.h"
 
 char	*ft_strjoin(char *s1, char *s2)
 {
@@ -32,8 +20,8 @@ char	*ft_strjoin(char *s1, char *s2)
 	char	*dest;
 
 	i = 0;
-	lens1 = ft_strlen1(s1);
-	tlen = ft_strlen1(s1) + ft_strlen1(s2) + 1;
+	lens1 = ft_strlen(s1);
+	tlen = lens1 + ft_strlen(s2) + 1;
 	dest = malloc(sizeof(char) * tlen);
 	if (dest == NULL || s1 == NULL || s2 == NULL)
 		return (NULL);

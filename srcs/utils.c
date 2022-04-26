@@ -35,7 +35,7 @@ void	ft_nb_arg_error(int argc)
 	}
 }
 
-void ft_free_char_tab(char **tab)
+void	ft_free_char_tab(char **tab)
 {
 	int	i;
 

@@ -10,21 +10,9 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include<stdlib.h>
+#include "pipex.h"
 
-static size_t	ft_strlen(const char *str)
-{
-	size_t	i;
-
-	i = 0;
-	if (str == NULL)
-		return (0);
-	while (str[i] != '\0')
-		i ++;
-	return (i);
-}
-
-static int	ft_is_in(char c, char const *set)
+static int	ft_is_in(char c, char *set)
 {
 	size_t	j;
 
@@ -38,7 +26,7 @@ static int	ft_is_in(char c, char const *set)
 	return (0);
 }
 
-char	*ft_strtrim(char const *s1, char const *set)
+char	*ft_strtrim(char *s1, char *set)
 {
 	char	*dest;
 	size_t	len;
@@ -61,5 +49,6 @@ char	*ft_strtrim(char const *s1, char const *set)
 			dest[k++] = s1[j++];
 		dest[k] = '\0';
 	}
+	free(s1);
 	return (dest);
 }
